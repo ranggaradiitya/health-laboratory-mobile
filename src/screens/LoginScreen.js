@@ -1,11 +1,15 @@
 import { Alert, Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import rajaerbaLogo from '../assets/images/rajaerba-icon.png';
 import globalStyles from '../../styles';
 import axios from 'axios';
 import { useIsFocused } from '@react-navigation/native';
+import { Context } from '../../App';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function LoginScreen({ navigation }) {
+  const { dispatch } = useContext(Context);
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [users, setUsers] = useState({});
@@ -13,18 +17,17 @@ export default function LoginScreen({ navigation }) {
 
   useEffect(() => {
     if (isFocused) {
-      getUsers();
+      const getFetchUrl = () => {
+        return 'https://health-laboratory-cc968-default-rtdb.asia-southeast1.firebasedatabase.app/users.json';
+      };
+      const fetchData = async () => {
+        const response = await axios.get(getFetchUrl());
+        const data = response.data;
+        setUsers(data);
+      };
+      fetchData();
     }
   }, [isFocused]);
-
-  const getUsers = async () => {
-    try {
-      const response = await axios.get('https://health-laboratory-cc968-default-rtdb.asia-southeast1.firebasedatabase.app/users.json');
-      setUsers(response.data);
-    } catch (error) {
-      console.err(error);
-    }
-  };
 
   const validateLogin = () => (email === '' || password === '') ? false : true;
 
@@ -38,7 +41,9 @@ export default function LoginScreen({ navigation }) {
       for (const key in users) {
         const user = users[key];
         if (user.email === email && user.password === password) {
-          navigation.navigate('Home');
+          const userData = { ...user, id: key };
+          AsyncStorage.setItem('userToken', JSON.stringify(userData));
+          dispatch({ type: 'SIGN_IN', payload: userData });
           clearInputs();
           return;
         }

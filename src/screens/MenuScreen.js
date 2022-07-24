@@ -33,7 +33,7 @@ export default function MenuScreen({ navigation }) {
       fetchData();
       dispatch({ type: 'SET_MENU_SCREEN_NAVIGATION', payload: navigation });
     }
-  }, [dispatch, isFocused, navigation]);
+  }, [dispatch, isFocused, navigation, state.userToken]);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -61,6 +61,32 @@ export default function MenuScreen({ navigation }) {
     });
   };
 
+  const filterProducts = (key) => {
+    if (state.searchText.length > 0) {
+      if (state.products[key].name.toLowerCase().includes(state.searchText.toLowerCase())) {
+        return (
+          <Product
+            key={key}
+            id={key}
+            name={state.products[key].name}
+            price={state.products[key].price}
+            stock={state.products[key].stock}
+          />
+        );
+      }
+    } else {
+      return (
+        <Product
+          key={key}
+          id={key}
+          name={state.products[key].name}
+          price={state.products[key].price}
+          stock={state.products[key].stock}
+        />
+      );
+    }
+  };
+
   return (
     <View>
       <ScrollView
@@ -81,15 +107,7 @@ export default function MenuScreen({ navigation }) {
         }}
       >
         <View style={styles.container}>
-          {Object.keys(state.products).map((key) => (
-            <Product
-              key={key}
-              id={key}
-              name={state.products[key].name}
-              price={state.products[key].price}
-              stock={state.products[key].stock}
-            />
-          ))}
+          {Object.keys(state.products).map((key) => filterProducts(key))}
         </View>
       </ScrollView>
       {contentVerticalOffset > CONTENT_OFFSET_THRESHOLD && (

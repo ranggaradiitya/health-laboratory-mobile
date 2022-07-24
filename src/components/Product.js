@@ -69,8 +69,8 @@ export default function Product(props) {
       name: state.products[key].name,
       price: state.products[key].price,
       stock: state.products[key].stock,
-      quantity: 1,
-      totalPrice: state.products[key].price * 1,
+      quantity: '1',
+      totalPrice: `${Number(state.products[key].price) * 1}`,
     };
 
     // check if product is already in cart

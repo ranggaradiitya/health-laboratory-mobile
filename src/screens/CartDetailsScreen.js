@@ -74,7 +74,7 @@ const ProductInCart = ({ id, name, price }) => {
   };
 
   const handleQuantityChange = (number) => {
-    dispatch({ type: 'UPDATE_PRODUCT_IN_CART', payload: { id, quantity: number, totalPrice: price * number } });
+    dispatch({ type: 'UPDATE_PRODUCT_IN_CART', payload: { id, quantity: number, totalPrice: `${Number(price) * Number(number)}` } });
   };
 
   return (
@@ -95,9 +95,16 @@ const ProductInCart = ({ id, name, price }) => {
         <TextInput
           value={getProductQuantity()}
           defaultValue={`${getProductQuantity()}`}
-          onChangeText={(number) => handleQuantityChange(number)}
+          onChangeText={(number) => {
+            number = number.replace(/[^0-9]/g, '');
+            if (number === '' || number === '0') {
+              number = '1';
+            }
+            handleQuantityChange(number);
+          }}
           style={styles.input}
           keyboardType="numeric"
+          maxLength={2}
         />
       </View>
     </View>
@@ -114,7 +121,7 @@ const TotalPrice = ({ navigation }) => {
   const getTotalPrice = () => {
     let totalPrice = 0;
     for (const product of state.productInCart) {
-      totalPrice += product.totalPrice;
+      totalPrice += Number(product.totalPrice);
     }
     return formatRupiah(totalPrice);
   };
@@ -156,16 +163,7 @@ export default function CartDetailsScreen({ navigation }) {
                 price={product.price}
               />
             ))
-          ) : <Text style={[styles.emptyCart, GlobalStyles.setFontBold]}>Your cart is empty 😔</Text>
-          }
-          {/* {state.productInCart.map((product) => (
-            <ProductInCart
-              key={product.id}
-              id={product.id}
-              name={product.name}
-              price={product.price}
-            />
-          ))} */}
+          ) : <Text style={[styles.emptyCart, GlobalStyles.setFontBold]}>Your cart is empty 😔</Text>}
         </View>
       </ScrollView>
       <TotalPrice navigation={navigation} />
@@ -224,19 +222,24 @@ const styles = StyleSheet.create({
   totalPriceContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
     padding: 10,
+    borderTopWidth: 1,
+    borderTopColor: '#e8e9e9',
   },
   totalPriceWrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
   },
   totalPrice: {
     fontSize: 16,
-    marginRight: 10,
+    marginLeft: 10,
   },
   checkout: {
-    color: 'orange',
-    fontSize: 16,
+    fontSize: 14,
+    color: 'white',
+    backgroundColor: 'orange',
+    padding: 10,
+    paddingBottom: 7,
+    borderRadius: 5,
   },
   emptyCart: {
     fontSize: 20,
