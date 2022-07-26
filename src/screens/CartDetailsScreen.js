@@ -73,6 +73,17 @@ const ProductInCart = ({ id, name, price }) => {
     }
   };
 
+  const isQuantityExceedStock = (number) => {
+    for (const product of state.productInCart) {
+      if (product.id === id) {
+        if (Number(number) > Number(product.stock)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  };
+
   const handleQuantityChange = (number) => {
     dispatch({ type: 'UPDATE_PRODUCT_IN_CART', payload: { id, quantity: number, totalPrice: `${Number(price) * Number(number)}` } });
   };
@@ -99,6 +110,10 @@ const ProductInCart = ({ id, name, price }) => {
             number = number.replace(/[^0-9]/g, '');
             if (number === '' || number === '0') {
               number = '1';
+            }
+            if (isQuantityExceedStock(number)) {
+              Alert.alert('Quantity exceed stock', 'Please change the quantity to less than stock');
+              return;
             }
             handleQuantityChange(number);
           }}
@@ -195,7 +210,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     marginRight: 10,
     marginLeft: 10,
-    backgroundColor: '#e8e9e9',
+    backgroundColor: '#d1d1d1',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -218,6 +233,7 @@ const styles = StyleSheet.create({
     paddingBottom: 8,
     marginRight: 10,
     textAlign: 'center',
+    backgroundColor: 'white',
   },
   totalPriceContainer: {
     flexDirection: 'row',

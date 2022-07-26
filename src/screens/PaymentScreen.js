@@ -154,7 +154,7 @@ const TotalPayment = ({ name, email, phoneNumber, address, cardNumber, cardName,
         purchasedProducts: state.productInCart,
         status: 'PENDING',
       };
-      await axios.post('https://health-laboratory-cc968-default-rtdb.asia-southeast1.firebasedatabase.app/paymentDetailsCoba.json', paymentDetails);
+      await axios.post('https://health-laboratory-cc968-default-rtdb.asia-southeast1.firebasedatabase.app/paymentDetails.json', paymentDetails);
     } catch (error) {
       console.log(error);
     }
@@ -224,9 +224,6 @@ export default function PaymentScreen({ navigation }) {
   const [cardExpiry, setCardExpiry] = useState(state.userToken.cardDetails?.expiredDate ? state.userToken.cardDetails.expiredDate : '');
   const [cardCVV, setCardCVV] = useState(state.userToken.cardDetails?.cvv ? state.userToken.cardDetails.cvv : '');
 
-  console.log(state.userToken.email);
-  console.log(typeof state.userToken);
-
   return (
     <View style={styles.container}>
       <ScrollView>
@@ -245,6 +242,7 @@ export default function PaymentScreen({ navigation }) {
               setPhoneNumber(text.replace(/[^0-9]/g, ''));
             }}
             maxLength={15}
+            keyboardType="numeric"
           />
           <Text style={[styles.label, GlobalStyles.setFontBold]}>Address</Text>
           <Text style={[styles.label, GlobalStyles.setFont]}>Include your country, city, state, and zip code</Text>
@@ -262,6 +260,7 @@ export default function PaymentScreen({ navigation }) {
               setCardNumber(text.replace(/[^0-9]/g, ''));
             }}
             maxLength={12}
+            keyboardType="numeric"
           />
           <Text style={[styles.label, GlobalStyles.setFontBold]}>Name on Card</Text>
           <TextInput style={[styles.input, GlobalStyles.setFont]} placeholder="John Doe" value={cardName} onChangeText={setCardName} />
@@ -276,6 +275,7 @@ export default function PaymentScreen({ navigation }) {
               setCardCVV(text.replace(/[^0-9]/g, ''));
             }}
             maxLength={3}
+            keyboardType="numeric"
           />
         </View>
       </ScrollView >
@@ -319,6 +319,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 10,
     marginBottom: 10,
+    backgroundColor: 'white',
   },
   totalPaymentContainer: {
     flexDirection: 'row',

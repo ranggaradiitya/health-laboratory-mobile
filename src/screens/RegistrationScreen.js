@@ -41,6 +41,12 @@ export default function RegistrationScreen({ navigation }) {
 
   const handleregister = async () => {
     if (validateRegister()) {
+      const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w\w+)+$/;
+      if (!emailRegex.test(email)) {
+        Alert.alert('Warning', 'Email is not valid');
+        return;
+      }
+
       if (isEmailExist()) {
         Alert.alert('Registration Failed', 'Email already exist');
         return;

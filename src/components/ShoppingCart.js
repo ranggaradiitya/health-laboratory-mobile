@@ -7,10 +7,8 @@ export default function ShoppingCart() {
   const { state } = useContext(Context);
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={() => state.menuScreenNavigation.navigate('CartDetailsScreen')}>
-        <Image source={ShoppingCartIcon} style={styles.icon} />
-        {state.productInCart.length > 0 && <Text style={styles.quantity}>{state.productInCart.length}</Text>}
-      </TouchableOpacity>
+      <Image source={ShoppingCartIcon} style={styles.icon} />
+      {state.productInCart.length > 0 && <Text style={styles.quantity}>{state.productInCart.length}</Text>}
     </View>
   );
 }

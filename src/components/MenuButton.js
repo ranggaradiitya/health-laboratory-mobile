@@ -1,15 +1,13 @@
-import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
-import React, { useContext } from 'react';
+import { Image, StyleSheet, View } from 'react-native';
+import React from 'react';
 import MenuIcon from '../assets/images/outline_menu_black_24dp.png';
-import { Context } from '../../App';
 
-export default function MenuButton() {
-  const { state } = useContext(Context);
+export default function MenuButton({ marginRight }) {
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={() => state.menuScreenNavigation.toggleDrawer()}>
-        <Image source={MenuIcon} style={styles.menuIcon} />
-      </TouchableOpacity>
+      <Image source={MenuIcon} style={[styles.menuIcon, {
+        marginRight: marginRight,
+      }]} />
     </View>
   );
 }

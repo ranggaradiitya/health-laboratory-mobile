@@ -1,15 +1,19 @@
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import React from 'react';
 import SearchBar from './SearchBar';
 import ShoppingCart from './ShoppingCart';
 import MenuButton from './MenuButton';
 
-export default function HeaderBar() {
+export default function HeaderBar({ navigation }) {
   return (
     <View style={styles.container}>
       <SearchBar />
-      <ShoppingCart />
-      <MenuButton />
+      <TouchableOpacity onPress={() => navigation.navigate('CartDetailsScreen')}>
+        <ShoppingCart />
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.toggleDrawer()}>
+        <MenuButton />
+      </TouchableOpacity>
     </View>
   );
 }

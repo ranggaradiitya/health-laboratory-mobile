@@ -1,11 +1,12 @@
 import { RefreshControl, ScrollView, StyleSheet, View } from 'react-native';
-import React, { useContext, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useIsFocused } from '@react-navigation/native';
 import axios from 'axios';
 import { Context } from '../../App';
 import Product from '../components/Product';
 import FloatingButton from '../components/FloatingButton';
 import HeaderBar from '../components/HeaderBar';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function MenuScreen({ navigation }) {
   const { state, dispatch } = useContext(Context);
@@ -22,28 +23,20 @@ export default function MenuScreen({ navigation }) {
 
   useEffect(() => {
     if (isFocused) {
-      const getFetchUrl = () => {
-        return 'https://health-laboratory-cc968-default-rtdb.asia-southeast1.firebasedatabase.app/products.json';
-      };
-      const fetchData = async () => {
-        const response = await axios.get(getFetchUrl());
-        const data = response.data;
-        dispatch({ type: 'SET_PRODUCTS', payload: data });
-      };
-      fetchData();
-      dispatch({ type: 'SET_MENU_SCREEN_NAVIGATION', payload: navigation });
+      getProducts();
+      getUser();
     }
-  }, [dispatch, isFocused, navigation, state.userToken]);
+  }, [getProducts, getUser, isFocused, state.products]);
 
   useLayoutEffect(() => {
     navigation.setOptions({
       headerLeft: () => (
-        <HeaderBar />
+        <HeaderBar navigation={navigation} />
       ),
     });
   }, [navigation]);
 
-  const getProducts = () => {
+  const getProducts = useCallback(() => {
     const getFetchUrl = () => {
       return 'https://health-laboratory-cc968-default-rtdb.asia-southeast1.firebasedatabase.app/products.json';
     };
@@ -53,7 +46,20 @@ export default function MenuScreen({ navigation }) {
       dispatch({ type: 'SET_PRODUCTS', payload: data });
     };
     fetchData();
-  };
+  }, [dispatch]);
+
+  const getUser = useCallback(() => {
+    const getFetchUrl = () => {
+      return `https://health-laboratory-cc968-default-rtdb.asia-southeast1.firebasedatabase.app/users/${state.userToken.id}.json`;
+    };
+    const fetchData = async () => {
+      const response = await axios.get(getFetchUrl());
+      const data = response.data;
+      await AsyncStorage.setItem('userToken', JSON.stringify({ ...data, id: state.userToken.id }));
+      dispatch({ type: 'RESTORE_TOKEN', payload: { ...data, id: state.userToken.id } });
+    };
+    fetchData();
+  }, [dispatch, state.userToken.id]);
 
   const wait = (ms) => {
     return new Promise((resolve) => {
@@ -62,8 +68,20 @@ export default function MenuScreen({ navigation }) {
   };
 
   const filterProducts = (key) => {
-    if (state.searchText.length > 0) {
-      if (state.products[key].name.toLowerCase().includes(state.searchText.toLowerCase())) {
+    if (Number(state.products[key].stock) > 0) {
+      if (state.searchText.length > 0) {
+        if (state.products[key].name.toLowerCase().includes(state.searchText.toLowerCase())) {
+          return (
+            <Product
+              key={key}
+              id={key}
+              name={state.products[key].name}
+              price={state.products[key].price}
+              stock={state.products[key].stock}
+            />
+          );
+        }
+      } else {
         return (
           <Product
             key={key}
@@ -74,16 +92,6 @@ export default function MenuScreen({ navigation }) {
           />
         );
       }
-    } else {
-      return (
-        <Product
-          key={key}
-          id={key}
-          name={state.products[key].name}
-          price={state.products[key].price}
-          stock={state.products[key].stock}
-        />
-      );
     }
   };
 
@@ -98,6 +106,7 @@ export default function MenuScreen({ navigation }) {
               setRefreshing(true);
               await wait(2000);
               getProducts();
+              getUser();
               setRefreshing(false);
             }}
           />

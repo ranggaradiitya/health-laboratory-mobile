@@ -40,11 +40,6 @@ export const reducer = (state, action) => {
         ...state,
         productInCart: [],
       };
-    case 'SET_MENU_SCREEN_NAVIGATION':
-      return {
-        ...state,
-        menuScreenNavigation: action.payload,
-      };
     case 'SET_IS_LOADING':
       return {
         ...state,
@@ -66,6 +61,30 @@ export const reducer = (state, action) => {
         ...state,
         isSignout: true,
         userToken: null,
+      };
+    case 'UPDATE_USER_TOKEN':
+      return {
+        ...state,
+        userToken: {
+          ...state.userToken,
+          ...action.payload,
+        },
+      };
+    case 'UPDATE_EMAIL':
+      return {
+        ...state,
+        userToken: {
+          ...state.userToken,
+          email: action.payload,
+        },
+      };
+    case 'UPDATE_PASSWORD':
+      return {
+        ...state,
+        userToken: {
+          ...state.userToken,
+          password: action.payload,
+        },
       };
   }
 };

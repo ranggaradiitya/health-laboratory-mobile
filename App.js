@@ -2,7 +2,7 @@ import React, { createContext, useEffect, useReducer } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItem, DrawerItemList } from '@react-navigation/drawer';
-import { Image, StatusBar } from 'react-native';
+import { Image, StatusBar, Text } from 'react-native';
 import { initialState } from './src/context/initialState';
 import { reducer } from './src/context/reducer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -13,9 +13,13 @@ import LoginScreen from './src/screens/LoginScreen';
 import MenuScreen from './src/screens/MenuScreen';
 import CartDetailsScreen from './src/screens/CartDetailsScreen';
 import PaymentScreen from './src/screens/PaymentScreen';
+import ProfileScreen from './src/screens/ProfileScreen';
+import AccountScreen from './src/screens/AccountScreen';
 
 import ProductIcon from './src/assets/images/outline_inventory_2_black_24dp.png';
 import LogoutIcon from './src/assets/images/outline_logout_black_24dp.png';
+import ProfileIcon from './src/assets/images/outline_person_black_24dp.png';
+import AccountIcon from './src/assets/images/outline_manage_accounts_black_24dp.png';
 
 export const Context = createContext();
 
@@ -23,9 +27,17 @@ const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 
 const CustomDrawerContent = props => {
-  const { dispatch } = React.useContext(Context);
+  const { state, dispatch } = React.useContext(Context);
   return (
     <DrawerContentScrollView {...props}>
+      <Text style={{
+        fontSize: 20,
+        margin: 20,
+        paddingBottom: 10,
+        fontFamily: 'Poppins-Bold',
+        borderBottomWidth: 1,
+        borderBottomColor: 'black',
+      }}>Hello, {state.userToken.fullName.split(' ')[0]}</Text>
       <DrawerItemList {...props} />
       <DrawerItem
         label="Logout"
@@ -73,6 +85,33 @@ const MyDrawer = () => {
           ),
         }}
       />
+      <Drawer.Screen
+        name="ProfileScreen"
+        component={ProfileScreen}
+        options={{
+          title: 'Profile',
+          headerShadowVisible: false,
+          headerBackVisible: false,
+          drawerLabel: 'Profile',
+          drawerIcon: ({ focused }) => (
+            <Image source={ProfileIcon} style={{ tintColor: focused ? 'orange' : 'black' }} />
+          ),
+          unmountOnBlur: true,
+        }}
+      />
+      <Drawer.Screen
+        name="AccountScreen"
+        component={AccountScreen}
+        options={{
+          title: 'Account',
+          headerShadowVisible: false,
+          headerBackVisible: false,
+          drawerLabel: 'Account',
+          drawerIcon: ({ focused }) => (
+            <Image source={AccountIcon} style={{ tintColor: focused ? 'orange' : 'black' }} />
+          ),
+        }}
+      />
     </Drawer.Navigator>
   );
 };
@@ -88,7 +127,6 @@ const App = () => {
       let userToken;
       try {
         userToken = await AsyncStorage.getItem('userToken');
-        // console.log(userToken);
       }
       catch (error) {
         console.log(error);
@@ -150,7 +188,6 @@ const App = () => {
                 component={CartDetailsScreen}
                 options={{
                   title: 'My Cart',
-                  headerStyle: { backgroundColor: '#f2f2f2' },
                   headerShadowVisible: false,
                 }}
               />
@@ -159,7 +196,6 @@ const App = () => {
                 component={PaymentScreen}
                 options={{
                   title: 'Payment',
-                  headerStyle: { backgroundColor: '#f2f2f2' },
                   headerShadowVisible: false,
                 }}
               />

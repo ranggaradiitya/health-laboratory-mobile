@@ -38,6 +38,12 @@ export default function LoginScreen({ navigation }) {
 
   const handleLogin = () => {
     if (validateLogin()) {
+      const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w\w+)+$/;
+      if (!emailRegex.test(email)) {
+        Alert.alert('Warning', 'Email is not valid');
+        return;
+      }
+
       for (const key in users) {
         const user = users[key];
         if (user.email === email && user.password === password) {

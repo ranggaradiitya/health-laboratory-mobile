@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
   searchWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: '#f2f2f2',
     borderRadius: 10,
     marginVertical: 10,
     marginLeft: 15,
