@@ -1,12 +1,18 @@
-import { Alert, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React, { useContext } from 'react';
+import {
+  Alert,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import React, {useContext} from 'react';
 import globalStyles from '../../styles';
-import { Context } from '../../App';
+import {Context} from '../../App';
 
 export default function Product(props) {
-  const { state, dispatch } = useContext(Context);
-  const { id, name, price, stock } = props;
-
+  const {state, dispatch} = useContext(Context);
+  const {id, name, price, stock} = props;
 
   const getImageUrl = () => {
     const images = [
@@ -59,11 +65,11 @@ export default function Product(props) {
     return url;
   };
 
-  const formatRupiah = (money) => {
+  const formatRupiah = money => {
     return 'Rp' + money.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
   };
 
-  const handleAddToCartButton = (key) => {
+  const handleAddToCartButton = key => {
     const newProduct = {
       id: key,
       name: state.products[key].name,
@@ -85,26 +91,27 @@ export default function Product(props) {
     if (isAlreadyInCart) {
       Alert.alert('Warning', 'Product already in cart');
     } else {
-      dispatch({ type: 'ADD_TO_CART', payload: newProduct });
+      dispatch({type: 'ADD_TO_CART', payload: newProduct});
     }
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.imageWrapper}>
-        <Image
-          source={getImageUrl()}
-          style={styles.image}
-        />
+        <Image source={getImageUrl()} style={styles.image} />
       </View>
       <Text style={[styles.name, globalStyles.setFontBold]}>
-        {(name.length > 14) ? name.slice(0, 14) + '..' : name}
+        {name.length > 14 ? name.slice(0, 14) + '..' : name}
       </Text>
       <View>
         <Text style={globalStyles.setFont}>{formatRupiah(price)}</Text>
         <Text style={[styles.stock, globalStyles.setFont]}>Stock: {stock}</Text>
-        <TouchableOpacity style={styles.buttonWrapper} onPress={() => handleAddToCartButton(id)}>
-          <Text style={[styles.button, globalStyles.setFontBold]}>Add product</Text>
+        <TouchableOpacity
+          style={styles.buttonWrapper}
+          onPress={() => handleAddToCartButton(id)}>
+          <Text style={[styles.button, globalStyles.setFontBold]}>
+            Add product
+          </Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -125,10 +132,11 @@ const styles = StyleSheet.create({
   imageWrapper: {
     backgroundColor: '#e8e9e9',
     borderRadius: 5,
-    width: 147,
+    width: 156,
     height: 93,
     justifyContent: 'center',
     alignItems: 'center',
+    alignSelf: 'center',
   },
   image: {
     width: 117,

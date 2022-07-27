@@ -6,7 +6,6 @@ import { Context } from '../../App';
 import Product from '../components/Product';
 import FloatingButton from '../components/FloatingButton';
 import HeaderBar from '../components/HeaderBar';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function MenuScreen({ navigation }) {
   const { state, dispatch } = useContext(Context);
@@ -24,9 +23,8 @@ export default function MenuScreen({ navigation }) {
   useEffect(() => {
     if (isFocused) {
       getProducts();
-      getUser();
     }
-  }, [getProducts, getUser, isFocused, state.products]);
+  }, [getProducts, isFocused, state.products]);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -47,19 +45,6 @@ export default function MenuScreen({ navigation }) {
     };
     fetchData();
   }, [dispatch]);
-
-  const getUser = useCallback(() => {
-    const getFetchUrl = () => {
-      return `https://health-laboratory-cc968-default-rtdb.asia-southeast1.firebasedatabase.app/users/${state.userToken.id}.json`;
-    };
-    const fetchData = async () => {
-      const response = await axios.get(getFetchUrl());
-      const data = response.data;
-      await AsyncStorage.setItem('userToken', JSON.stringify({ ...data, id: state.userToken.id }));
-      dispatch({ type: 'RESTORE_TOKEN', payload: { ...data, id: state.userToken.id } });
-    };
-    fetchData();
-  }, [dispatch, state.userToken.id]);
 
   const wait = (ms) => {
     return new Promise((resolve) => {
@@ -106,7 +91,6 @@ export default function MenuScreen({ navigation }) {
               setRefreshing(true);
               await wait(2000);
               getProducts();
-              getUser();
               setRefreshing(false);
             }}
           />

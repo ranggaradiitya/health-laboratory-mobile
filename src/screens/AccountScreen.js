@@ -1,17 +1,25 @@
-import { Alert, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import React, { useContext, useLayoutEffect } from 'react';
+import {
+  Alert,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import React, {useContext, useLayoutEffect} from 'react';
 import MenuButton from '../components/MenuButton';
 import GlobalStyles from '../../styles';
-import { Context } from '../../App';
+import {Context} from '../../App';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default function AccountScreen({ navigation }) {
+export default function AccountScreen({navigation}) {
   const [newEmail, setNewEmail] = React.useState('');
   const [newPassword, setNewPassword] = React.useState('');
   const [newPasswordConfirm, setNewPasswordConfirm] = React.useState('');
 
-  const { state, dispatch } = useContext(Context);
+  const {state, dispatch} = useContext(Context);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -44,10 +52,16 @@ export default function AccountScreen({ navigation }) {
     }
 
     try {
-      const updatedEmail = { email: newEmail };
-      await axios.patch(`https://health-laboratory-cc968-default-rtdb.asia-southeast1.firebasedatabase.app/users/${state.userToken.id}.json`, updatedEmail);
-      await AsyncStorage.setItem('userToken', JSON.stringify({ ...state.userToken, email: newEmail }));
-      dispatch({ type: 'UPDATE_EMAIL', payload: newEmail });
+      const updatedEmail = {email: newEmail};
+      await axios.patch(
+        `https://health-laboratory-cc968-default-rtdb.asia-southeast1.firebasedatabase.app/users/${state.userToken.id}.json`,
+        updatedEmail,
+      );
+      await AsyncStorage.setItem(
+        'userToken',
+        JSON.stringify({...state.userToken, email: newEmail}),
+      );
+      dispatch({type: 'UPDATE_EMAIL', payload: newEmail});
       Alert.alert('Success', 'Email has been updated');
       setNewEmail('');
     } catch (error) {
@@ -67,10 +81,16 @@ export default function AccountScreen({ navigation }) {
     }
 
     try {
-      const updatedPassword = { password: newPassword };
-      await axios.patch(`https://health-laboratory-cc968-default-rtdb.asia-southeast1.firebasedatabase.app/users/${state.userToken.id}.json`, updatedPassword);
-      await AsyncStorage.setItem('userToken', JSON.stringify({ ...state.userToken, password: newPassword }));
-      dispatch({ type: 'UPDATE_PASSWORD', payload: newPassword });
+      const updatedPassword = {password: newPassword};
+      await axios.patch(
+        `https://health-laboratory-cc968-default-rtdb.asia-southeast1.firebasedatabase.app/users/${state.userToken.id}.json`,
+        updatedPassword,
+      );
+      await AsyncStorage.setItem(
+        'userToken',
+        JSON.stringify({...state.userToken, password: newPassword}),
+      );
+      dispatch({type: 'UPDATE_PASSWORD', payload: newPassword});
       Alert.alert('Success', 'Password has been updated');
       setNewPassword('');
       setNewPasswordConfirm('');
@@ -83,18 +103,47 @@ export default function AccountScreen({ navigation }) {
     <View style={styles.container}>
       <ScrollView>
         <View style={styles.addressWrapper}>
-          <Text style={[styles.label, GlobalStyles.setFontBold]}>New Email</Text>
-          <TextInput style={[styles.input, GlobalStyles.setFont]} placeholder="Enter your full name" value={newEmail} onChangeText={setNewEmail} />
+          <Text style={[styles.label, GlobalStyles.setFontBold]}>
+            New Email
+          </Text>
+          <TextInput
+            style={[styles.input, GlobalStyles.setFont]}
+            placeholder="Enter your full name"
+            value={newEmail}
+            onChangeText={setNewEmail}
+          />
           <TouchableOpacity style={styles.button} onPress={handleChangeEmail}>
-            <Text style={[styles.buttonText, GlobalStyles.setFontBold]}>Change Email</Text>
+            <Text style={[styles.buttonText, GlobalStyles.setFontBold]}>
+              Change Email
+            </Text>
           </TouchableOpacity>
           <View style={styles.divider} />
-          <Text style={[styles.label, GlobalStyles.setFontBold]}>New Password</Text>
-          <TextInput style={[styles.input, GlobalStyles.setFont]} placeholder="Enter your full name" value={newPassword} onChangeText={setNewPassword} secureTextEntry={true} />
-          <Text style={[styles.label, GlobalStyles.setFontBold]}>Confirm New Password</Text>
-          <TextInput style={[styles.input, GlobalStyles.setFont]} placeholder="Enter your full name" value={newPasswordConfirm} onChangeText={setNewPasswordConfirm} secureTextEntry={true} />
-          <TouchableOpacity style={styles.button} onPress={handleChnagePassword}>
-            <Text style={[styles.buttonText, GlobalStyles.setFontBold]}>Change Password</Text>
+          <Text style={[styles.label, GlobalStyles.setFontBold]}>
+            New Password
+          </Text>
+          <TextInput
+            style={[styles.input, GlobalStyles.setFont]}
+            placeholder="Enter your full name"
+            value={newPassword}
+            onChangeText={setNewPassword}
+            secureTextEntry={true}
+          />
+          <Text style={[styles.label, GlobalStyles.setFontBold]}>
+            Confirm New Password
+          </Text>
+          <TextInput
+            style={[styles.input, GlobalStyles.setFont]}
+            placeholder="Enter your full name"
+            value={newPasswordConfirm}
+            onChangeText={setNewPasswordConfirm}
+            secureTextEntry={true}
+          />
+          <TouchableOpacity
+            style={styles.button}
+            onPress={handleChnagePassword}>
+            <Text style={[styles.buttonText, GlobalStyles.setFontBold]}>
+              Change Password
+            </Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
