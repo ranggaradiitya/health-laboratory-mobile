@@ -55,6 +55,7 @@ const CustomDrawerContent = props => {
           const removeUserToken = async () => {
             try {
               await AsyncStorage.removeItem('userToken');
+              await AsyncStorage.setItem('isSignout', JSON.stringify(true));
             } catch (error) {
               console.log(error);
             }
@@ -132,7 +133,7 @@ const MyDrawer = () => {
           ),
         }}
       />
-      <Drawer.Screen
+      {/* <Drawer.Screen
         name="OrderStatusScreen"
         component={OrderStatusScreen}
         options={{
@@ -147,7 +148,7 @@ const MyDrawer = () => {
             />
           ),
         }}
-      />
+      /> */}
     </Drawer.Navigator>
   );
 };
@@ -161,13 +162,16 @@ const App = () => {
     }, 2000);
     const getUserToken = async () => {
       let userToken;
+      let isSignout;
       try {
         userToken = await AsyncStorage.getItem('userToken');
+        isSignout = await AsyncStorage.getItem('isSignout');
       } catch (error) {
         console.log(error);
       }
-      if (userToken) {
+      if (!JSON.parse(isSignout)) {
         dispatch({ type: 'RESTORE_TOKEN', payload: JSON.parse(userToken) });
+        dispatch({ type: 'SET_IS_SIGNOUT', payload: JSON.parse(isSignout) });
       }
     };
     getUserToken();
@@ -188,7 +192,7 @@ const App = () => {
               component={SplashScreen}
               options={{ headerShown: false }}
             />
-          ) : state.userToken === null ? (
+          ) : state.isSignout ? (
             <>
               <Stack.Screen
                 name="StartScreen"

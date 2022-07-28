@@ -108,14 +108,26 @@ const ProductInCart = ({ id, name, price }) => {
           defaultValue={`${getProductQuantity()}`}
           onChangeText={(number) => {
             number = number.replace(/[^0-9]/g, '');
-            if (number === '' || number === '0') {
-              number = '1';
+            if (number === '') {
+              number = '0';
+            }
+            if (number.length > 1 && number[0] === '0') {
+              number = number.slice(1);
             }
             if (isQuantityExceedStock(number)) {
               Alert.alert('Quantity exceed stock', 'Please change the quantity to less than stock');
               return;
             }
             handleQuantityChange(number);
+          }}
+          onEndEditing={(number) => {
+            number = number.nativeEvent.text;
+            if (number === '0') {
+              Alert.alert('Warning', 'Are you sure you want to remove this product from cart?', [
+                { text: 'No', style: 'cancel', onPress: () => handleQuantityChange(1) },
+                { text: 'Yes', onPress: removeProduct },
+              ]);
+            }
           }}
           style={styles.input}
           keyboardType="numeric"

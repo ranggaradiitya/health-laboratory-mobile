@@ -49,6 +49,7 @@ export default function LoginScreen({ navigation }) {
         if (user.email === email && user.password === password) {
           const userData = { ...user, id: key };
           AsyncStorage.setItem('userToken', JSON.stringify(userData));
+          AsyncStorage.setItem('isSignout', JSON.stringify(false));
           dispatch({ type: 'SIGN_IN', payload: userData });
           clearInputs();
           return;
