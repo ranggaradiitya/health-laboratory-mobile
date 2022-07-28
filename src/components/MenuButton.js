@@ -1,13 +1,19 @@
-import { Image, StyleSheet, View } from 'react-native';
+import {Image, StyleSheet, View} from 'react-native';
 import React from 'react';
 import MenuIcon from '../assets/images/outline_menu_black_24dp.png';
 
-export default function MenuButton({ marginRight }) {
+export default function MenuButton({marginRight}) {
   return (
     <View style={styles.container}>
-      <Image source={MenuIcon} style={[styles.menuIcon, {
-        marginRight: marginRight,
-      }]} />
+      <Image
+        source={MenuIcon}
+        style={[
+          styles.menuIcon,
+          {
+            marginRight: marginRight,
+          },
+        ]}
+      />
     </View>
   );
 }

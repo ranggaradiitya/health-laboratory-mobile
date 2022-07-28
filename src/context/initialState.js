@@ -4,6 +4,6 @@ export const initialState = {
   productInCart: [],
   menuScreenNavigation: null,
   isLoading: true,
-  isSignout: false,
+  isSignout: true,
   userToken: null,
 };

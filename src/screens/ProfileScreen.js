@@ -32,9 +32,8 @@ export default function ProfileScreen({ navigation }) {
   useEffect(() => {
     if (isFocused) {
       getUser();
-      updateFormWhenRefresh();
     }
-  }, [getUser, isFocused, updateFormWhenRefresh, state.userToken]);
+  }, [getUser, isFocused, state.userToken, updateFormWhenRefresh]);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -123,6 +122,7 @@ export default function ProfileScreen({ navigation }) {
               setRefreshing(true);
               await wait(2000);
               getUser();
+              updateFormWhenRefresh();
               setRefreshing(false);
             }}
           />
